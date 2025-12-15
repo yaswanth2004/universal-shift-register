@@ -1,0 +1,31 @@
+module tb_usr_universal_shift_register;
+reg clk, rst;
+reg [1:0] select;
+reg [3:0] p_data;
+reg s_in;
+wire s_out;
+wire [3:0] q_parallel;
+usr_universal_shift_register DUT(clk,rst,select,p_data,s_in,s_out,q_parallel);
+always #5 clk = ~clk;
+initial begin
+clk=0; rst=0;
+p_data = 4'b1101;
+select = 2'b11;    //pipo
+#10;
+select = 2'b01;    //piso
+#40;
+rst = 1;#10; rst = 0; s_in = 1;          //sipo
+select = 2'b10; #10;
+s_in = 0; #10;
+s_in = 1; #10;
+s_in = 1; #10;
+rst = 1;#10; rst = 0;select = 2'b10; #10;       //siso
+s_in = 1;#10;      
+s_in =1;#10;
+s_in =0;#10;
+s_in =1;#10;
+end
+initial begin 
+$monitor("Time=%0t | clk=%b | rst=%b | p_data=%b| select=%b | s_in=%b | s_out=%b | q_parallel=%b",$time,clk,rst,p_data,select,s_in,s_out,q_parallel);
+end
+endmodule
